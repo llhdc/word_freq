@@ -10,8 +10,7 @@ class Wordfreq
     .split(" ")
     .reject { |e| STOP_WORDS.include? e }
     @words = Hash.new
-    puts @contents
-    @contents.uniq.each do |x|
+    @contents.each do |x|
       @words["#{x}"] = @contents.count(x)
     end
   end
@@ -19,20 +18,26 @@ class Wordfreq
 
   def frequency(word)
     # take word and count the amount of times it appears in the txt file
-    @words[word]
+    if @words[word] == nil
+      0
+    else
+      @words[word]
+    end
   end
 
   def frequencies
-
+    @words
   end
 
   def top_words(number)
     #show the words that appear above a certain number
-    @words.take(number)
+    @words.sort { |a, b| [b[1], a[0]] <=> [a[1], b[0]] }[0..(number - 1)]
   end
 
   def print_report
-
+    top_words(10).each do |word, times|
+      puts "#{word} |".rjust(9, ' ') + " #{times}".ljust(4, ' ') + "*" * times.to_i
+    end
   end
 end
 
